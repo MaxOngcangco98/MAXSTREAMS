@@ -3,6 +3,7 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MAX STREAMS</title>
+
 <style>
 body {
     margin: 0;
@@ -18,6 +19,7 @@ body {
     top: 40%;
     width: 100%;
     text-align: center;
+    z-index: 1000;
 }
 input[type=password] {
     padding: 15px;
@@ -25,172 +27,178 @@ input[type=password] {
     border: none;
     background: #222;
     color: #fff;
-    letter-spacing: 5px;
-    font-size: 18px;
 }
 
-/* ANIMATION */
-#animation {
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:1000;
-    color:#00ff99;
-    font-size: 48px;
-    font-weight:900;
-    text-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99;
-    opacity:0;
-    transform: translateY(100px);
-    pointer-events:none;
-    transition: all 1s ease;
-}
-
-/* TOP BAR */
+/* TOP */
 .top {
     position: fixed;
     top: 0;
     width: 100%;
     height: 60px;
-    background: linear-gradient(90deg, #111, #111);
+    background: #111;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    z-index: 10;
-    box-shadow: 0 4px 12px rgba(0,255,150,0.1);
+    z-index: 500;
 }
-.top-left { font-weight: 700; font-size: 20px; cursor: pointer; color: #00ff99; }
-.top-center { flex: 1; margin: 0 20px; display:flex; gap:10px; }
-#search { flex:1; padding: 10px 15px; border-radius: 30px; border: none; background:#111; color:#fff; font-size:16px; }
-.top-right { font-weight:700; font-size:18px; color:#00ff99; margin-right:20px; }
+#search {
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+}
 
 /* CONTENT */
-.container { padding-top: 80px; padding-left:20px; padding-right:20px; }
-.row { margin: 25px 0; }
-.row h2 { font-size: 20px; font-weight: 600; color:#00ff99; margin-bottom:10px; }
-.scroll { display: flex; overflow-x:auto; gap:15px; scrollbar-width:none; }
-.scroll::-webkit-scrollbar{display:none;}
-.card { min-width:160px; background:#111; border-radius:12px; cursor:pointer; overflow:hidden; transition:transform 0.25s ease, box-shadow 0.25s ease; }
-.card:hover { transform:scale(1.07); box-shadow:0 0 20px #00ff99; }
-.card img { width:100%; height:230px; object-fit:cover; border-bottom:1px solid #222; }
-.card div { padding:10px; font-size:14px; text-align:center; }
-
-/* Make everything focusable on TV */
-.card, .btn, select, #search, .top-left, .top-right { outline: none; }
-.card:focus, .btn:focus, select:focus, #search:focus, .top-left:focus, .top-right:focus { outline: 2px solid #00ff99; }
-
-/* BUTTON */
-.btn {
-    padding:10px 15px;
-    background: linear-gradient(45deg,#00ff99,#00c853);
-    border:none;
-    border-radius:8px;
+.container { padding-top:80px; padding:20px; }
+.scroll { display:flex; gap:15px; overflow-x:auto; }
+.card {
+    min-width:160px;
+    background:#111;
+    border-radius:12px;
+    overflow:hidden;
     cursor:pointer;
-    font-weight:600;
-    color:#000;
+    position:relative;
+}
+.card img { width:100%; height:230px; object-fit:cover; }
+.card div { padding:10px; text-align:center; }
+
+/* DELETE */
+.delete-btn {
+    position:absolute;
+    top:5px;
+    right:5px;
+    background:red;
+    border:none;
+    color:#fff;
+    border-radius:50%;
+    width:22px;
+    height:22px;
+    cursor:pointer;
 }
 
 /* MODAL */
-.modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); display:none; justify-content:center; align-items:center; z-index:9999; }
-.modal-content { background:#111; padding:20px; border-radius:15px; width:90%; max-width:900px; display:flex; flex-direction:column; gap:10px; }
-iframe { width:100%; height:60vh; border:none; border-radius:10px; z-index:10001; pointer-events:auto; }
-#fullscreenBtn { margin-top:10px; }
+.modal {
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.95);
+    display:none;
+    overflow-y:auto;
+    z-index:2000;
+}
+.modal-content {
+    background:#111;
+    margin:40px auto;
+    padding:20px;
+    width:90%;
+    max-width:900px;
+}
+iframe { width:100%; height:60vh; border:none; }
+
+/* Season/Episode Menu */
+.season-menu { display:flex; overflow-x:auto; gap:5px; margin:10px 0; }
+.season-menu button { padding:5px 10px; background:#222; border:none; color:#fff; cursor:pointer; border-radius:5px; flex-shrink:0; }
+.ep-menu { display:flex; flex-wrap: wrap; gap:5px; margin:10px 0; }
+.ep-menu button { padding:5px 10px; background:#333; border:none; color:#fff; cursor:pointer; border-radius:5px; flex-shrink:0; }
+.fullscreen-btn { margin:10px 0; padding:5px 10px; background:#00ff99; border:none; color:#000; cursor:pointer; border-radius:5px; }
+
+/* MAX STREAMS intro */
+#intro { 
+    text-align:center; 
+    font-size:48px; 
+    margin-top:20px; 
+    color:#00ff99; 
+    position:absolute; 
+    top:40%; 
+    width:100%; 
+    z-index:1500; 
+}
 </style>
 </head>
+
 <body>
 
-<!-- LOGIN -->
 <div id="login">
 <h1>MAX STREAMS</h1>
-<input type="password" id="code" placeholder="Enter Code" onkeyup="loginCheck(event)" tabindex="0">
+<input type="password" id="code" placeholder="Enter Code" onkeyup="loginCheck(event)">
+<div id="intro" style="display:none;">WELCOME TO MAX STREAMS!</div>
 </div>
 
-<!-- ANIMATION -->
-<div id="animation">MAX STREAMS</div>
-
-<!-- APP -->
 <div id="app" style="display:none">
+
 <div class="top">
-    <div class="top-left" onclick="loadHome()" tabindex="0">Home</div>
+<div onclick="loadHome()">Home</div>
 
-    <div class="top-center">
-        <input id="search" placeholder="Search..." onkeyup="handleSearch(event)" tabindex="0">
-        <button class="btn" onclick="search()" tabindex="0">Search</button>
-    </div>
+<div>
+<input id="search" placeholder="Search..." onkeyup="handleSearch(event)">
+<button onclick="search()">Search</button>
+</div>
 
-    <div class="top-right" tabindex="0">MAX STREAMS</div>
+<div>MAX STREAMS</div>
 </div>
 
 <div class="container">
 <div id="results" class="scroll"></div>
 
-<div class="row"><h2>Resume Watching</h2><div class="scroll" id="continueRow"></div></div>
-<div class="row"><h2>For You</h2><div class="scroll" id="forYou"></div></div>
-<div class="row"><h2>Trending</h2><div class="scroll" id="trending"></div></div>
-</div>
+<h2>Resume Watching</h2>
+<div id="continueRow" class="scroll"></div>
+
+<h2>For You</h2>
+<div id="forYou" class="scroll"></div>
+
+<h2>Trending</h2>
+<div id="trending" class="scroll"></div>
 </div>
 
-<!-- MODAL -->
+</div>
+
 <div id="modal" class="modal" onclick="closeModal()">
 <div class="modal-content" onclick="event.stopPropagation()">
 <h2 id="title"></h2>
 <div id="content"></div>
-<button id="fullscreenBtn" class="btn" onclick="fullscreenPlayer()" tabindex="0">⛶ Fullscreen</button>
 </div>
 </div>
 
 <script>
 const CODE="1099";
 const API="https://www.omdbapi.com/?apikey=trilogy&s=";
-const SOURCES=[
-(id)=>`https://vidsrc.xyz/embed/movie?imdb=${id}`,
-(id)=>`https://vidsrc.me/embed/movie?imdb=${id}`,
-(id)=>`https://multiembed.mov/?video_id=${id}&tmdb=1`
-];
 
+/* LOGIN */
 function loginCheck(e){
 if(e.key==="Enter"){
 const input=document.getElementById("code");
-if(input.value===CODE){ animateLogo(); }
-else{ input.value=""; input.placeholder="Wrong Code ❌"; }
-}
-}
-
-function animateLogo(){
-let anim=document.getElementById("animation");
-anim.style.opacity="1";
-anim.style.transform="translateY(0px)";
-setTimeout(()=>{ anim.style.textShadow="0 0 30px #00ff99"; },500);
-setTimeout(()=>{
-anim.style.opacity="0";
-anim.style.transform="translateY(-100px)";
-setTimeout(()=>{
+if(input.value===CODE){
 document.getElementById("login").style.display="none";
+document.getElementById("intro").style.display="block"; // show intro
+setTimeout(()=>{
+document.getElementById("intro").style.display="none"; // hide intro after 1.5s
 document.getElementById("app").style.display="block";
 loadHome();
-},1000);
-},2000);
+},1500);
+}
+}
 }
 
+/* HOME */
 function loadHome(){
-forYou.innerHTML=""; trending.innerHTML=""; continueRow.innerHTML=""; results.innerHTML="";
+forYou.innerHTML="";
+trending.innerHTML="";
+results.innerHTML="";
+loadContinue();
+
 makeRow("Avengers","forYou");
 makeRow("Batman","forYou");
 makeRow("Spiderman","trending");
 makeRow("Iron Man","trending");
-loadContinue();
 }
 
+/* ROW */
 function makeRow(q,id){
 fetch(API+q).then(r=>r.json()).then(d=>{
 if(!d.Search) return;
 d.Search.forEach(m=>{
 let c=document.createElement("div");
 c.className="card";
-c.setAttribute("tabindex","0");
 c.innerHTML=`<img src="${m.Poster}"><div>${m.Title}</div>`;
 c.onclick=()=>open(m.Title,m.imdbID,m.Poster);
 document.getElementById(id).appendChild(c);
@@ -198,20 +206,38 @@ document.getElementById(id).appendChild(c);
 });
 }
 
-function saveContinue(title,id,poster){ 
-let current = JSON.parse(localStorage.getItem("continue")||"[]");
-current.unshift({title,id,poster});
-localStorage.setItem("continue",JSON.stringify(current.slice(0,10)));
+/* SAVE */
+function saveContinue(title,id,poster,season=null,episode=null){
+let data=JSON.parse(localStorage.getItem("continue")||"[]");
+data=data.filter(x=>x.id!==id);
+data.unshift({title,id,poster,season,episode});
+localStorage.setItem("continue",JSON.stringify(data.slice(0,10)));
 }
 
+/* DELETE */
+function deleteContinue(id){
+let data=JSON.parse(localStorage.getItem("continue")||"[]");
+data=data.filter(x=>x.id!==id);
+localStorage.setItem("continue",JSON.stringify(data));
+loadContinue();
+}
+
+/* LOAD */
 function loadContinue(){
 let data=JSON.parse(localStorage.getItem("continue")||"[]");
+continueRow.innerHTML="";
 data.forEach(d=>{
 let c=document.createElement("div");
 c.className="card";
-c.setAttribute("tabindex","0");
-c.innerHTML=`<img src="${d.poster}"><div>${d.title}</div>`;
-c.onclick=()=>open(d.title,d.id,d.poster);
+c.innerHTML=`
+<button class="delete-btn" onclick="event.stopPropagation(); deleteContinue('${d.id}')">×</button>
+<img src="${d.poster}">
+<div>${d.title}</div>
+<div style="font-size:12px;color:#00ff99;">
+${d.season ? "S"+d.season+" E"+d.episode : ""}
+</div>
+`;
+c.onclick=()=>open(d.title,d.id,d.poster,d.season||1,d.episode||1);
 continueRow.appendChild(c);
 });
 }
@@ -228,7 +254,6 @@ if(!d.Search) return;
 d.Search.forEach(m=>{
 let c=document.createElement("div");
 c.className="card";
-c.setAttribute("tabindex","0");
 c.innerHTML=`<img src="${m.Poster}"><div>${m.Title}</div>`;
 c.onclick=()=>open(m.Title,m.imdbID,m.Poster);
 results.appendChild(c);
@@ -236,59 +261,82 @@ results.appendChild(c);
 });
 }
 
-function open(title,id,poster){
-document.getElementById("modal").style.display="flex";
+/* OPEN */
+function open(title,id,poster,season=1,episode=1){
+document.getElementById("modal").style.display="block";
 document.getElementById("title").innerText=title;
-saveContinue(title,id,poster);
-movieUI(title,id);
-}
 
-/* MOVIE UI */
-function movieUI(title,id){
 content.innerHTML=`
-<button class="btn" onclick="closeModal()" tabindex="0">⬅ Back</button>
-<select id="season" tabindex="0"></select>
-<select id="episode" tabindex="0"></select>
-<button class="btn" onclick="playEpisode('${id}')" tabindex="0">▶ Play Episode</button>
-${SOURCES.map((s,i)=>`<button class="btn" onclick="play(${i},'${id}')" tabindex="0">Source ${i+1}</button>`).join("")}
+<button onclick="closeModal()">Back</button>
+<div id="seasonMenu" class="season-menu"></div>
+<div id="epMenu" class="ep-menu"></div>
+<button class="fullscreen-btn" onclick="goFullscreen()">Fullscreen</button>
 <iframe id="player"></iframe>
 `;
-for(let i=1;i<=8;i++){
-season.innerHTML+=`<option value="${i}">Season ${i}</option>`;
+
+let player=document.getElementById("player");
+let seasonMenu=document.getElementById("seasonMenu");
+let epMenu=document.getElementById("epMenu");
+
+/* DETECT TYPE */
+fetch(`https://www.omdbapi.com/?apikey=trilogy&i=${id}`)
+.then(r=>r.json())
+.then(data=>{
+
+if(data.Type==="movie"){
+    player.src=`https://vidsrc.me/embed/movie?imdb=${id}`;
+    saveContinue(title,id,poster,null,null);
+    seasonMenu.style.display="none";
+    epMenu.style.display="none";
+}else{
+    const danceMomsEpisodes = {1:13,2:28,3:43,4:32,5:36,6:33,7:29,8:18};
+    let totalSeasons = Object.keys(danceMomsEpisodes).length;
+
+    seasonMenu.innerHTML="";
+    for(let s=1;s<=totalSeasons;s++){
+        let btn=document.createElement("button");
+        btn.innerText="S"+s;
+        btn.onclick=()=>{ season=s; loadEpisodes(s); };
+        seasonMenu.appendChild(btn);
+    }
+
+    function loadEpisodes(s){
+        epMenu.innerHTML="";
+        let eps = danceMomsEpisodes[s] || 10;
+        for(let e=1;e<=eps;e++){
+            let btn=document.createElement("button");
+            btn.innerText="E"+e;
+            btn.onclick=()=>{
+                episode=e;
+                player.src=`https://vidsrc.me/embed/tv?imdb=${id}&season=${season}&episode=${episode}`;
+                saveContinue(title,id,poster,season,episode);
+            };
+            epMenu.appendChild(btn);
+        }
+        if(!episode) episode=1;
+        player.src=`https://vidsrc.me/embed/tv?imdb=${id}&season=${season}&episode=${episode}`;
+    }
+
+    loadEpisodes(season);
 }
-updateEpisodes();
-play(0,id);
+});
+
+/* FULLSCREEN */
+window.goFullscreen=function(){
+let player=document.getElementById("player");
+if(player.requestFullscreen) player.requestFullscreen();
+else if(player.webkitRequestFullscreen) player.webkitRequestFullscreen();
+else if(player.msRequestFullscreen) player.msRequestFullscreen();
+}
 }
 
-function updateEpisodes(){
-episode.innerHTML="";
-for(let i=1;i<=30;i++){
-episode.innerHTML+=`<option value="${i}">Episode ${i}</option>`;
+/* CLOSE */
+function closeModal(){
+let p=document.getElementById("player");
+if(p) p.src="";
+document.getElementById("modal").style.display="none";
 }
-}
-
-function playEpisode(id){
-let s=season.value;
-let e=episode.value;
-player.src=`https://vidsrc.me/embed/tv?imdb=${id}&season=${s}&episode=${e}`;
-}
-
-function play(i,id){ 
-let player = document.getElementById("player");
-player.src = SOURCES[i](id);
-setTimeout(()=>{
-if(player.src.includes("movie")){
-player.src = `https://vidsrc.me/embed/tv?imdb=${id}&season=1&episode=1`;
-}
-},1500);
-}
-
-function fullscreenPlayer(){
-let iframe=document.getElementById("player");
-if(iframe.requestFullscreen) iframe.requestFullscreen();
-}
-
-function closeModal(){ document.getElementById("modal").style.display="none"; }
 </script>
+
 </body>
 </html>
